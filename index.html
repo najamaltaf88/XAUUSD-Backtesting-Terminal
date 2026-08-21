@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080b10" />
-  <title>XAUUSD // PAPER TERMINAL</title>
+  <title>XAUUSD // BACKTEST LAB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,103 +13,44 @@
 <body>
   <div id="toastStack" class="toast-stack" aria-live="polite"></div>
   <header class="topbar">
-    <div class="brand-lockup">
-      <div class="brand-mark">X</div>
-      <div>
-        <div class="brand-name">AURUM TERMINAL</div>
-        <div class="brand-sub">XAUUSD · PAPER EXECUTION</div>
-      </div>
-    </div>
-    <div class="market-strip">
-      <div class="market-quote"><span class="quote-label">GOLD / USD</span><strong id="topPrice">—</strong><span id="topChange" class="positive">—</span></div>
-      <div class="market-status"><i class="status-dot"></i><span id="dataStatus">CONNECTING DATA</span><small id="lastUpdated">—</small></div>
-    </div>
-    <div class="top-actions">
-      <button class="icon-button" id="refreshButton" title="Refresh market data" aria-label="Refresh market data">↻</button>
-      <button class="icon-button" id="settingsButton" title="Account settings" aria-label="Account settings">⚙</button>
-    </div>
+    <div class="brand-lockup"><div class="brand-mark">X</div><div><div class="brand-name">AURUM BACKTEST LAB</div><div class="brand-sub">XAUUSD · HISTORICAL REPLAY</div></div></div>
+    <div class="header-center"><span class="replay-badge"><i></i> REPLAY MODE</span><span class="hidden-future">Future bars hidden</span><span id="dataStatus" class="data-status">LOADING DATA</span></div>
+    <div class="top-actions"><button id="exportCsv" class="header-button">Export CSV</button><button id="settingsButton" class="icon-button" title="Backtest settings">⚙</button></div>
   </header>
 
   <main class="app-shell">
     <section class="chart-panel panel">
       <div class="chart-header">
-        <div class="instrument-block">
-          <div class="instrument-symbol">XAUUSD <span class="live-badge">LIVE</span></div>
-          <div class="instrument-meta"><span id="ohlcSummary">O  — &nbsp; H  — &nbsp; L  — &nbsp; C  —</span><span class="muted">·</span><span id="sessionLabel">London / New York overlap</span></div>
-        </div>
-        <div class="chart-controls">
-          <div class="timeframes" id="timeframes" role="group" aria-label="Chart timeframes">
-            <button data-tf="1m">M1</button><button data-tf="5m">M5</button><button data-tf="15m">M15</button><button data-tf="30m">M30</button><button data-tf="1h" class="active">H1</button><button data-tf="4h">H4</button><button data-tf="1d">D1</button>
-          </div>
-          <button class="chart-action" id="resetChart" title="Reset chart view">Reset view</button>
-        </div>
+        <div><div class="instrument-symbol">XAUUSD <span class="historical-badge">HISTORICAL</span></div><div class="instrument-meta"><span id="ohlcSummary">O — · H — · L — · C —</span><span class="muted">·</span><span id="cursorLabel">Replay cursor —</span></div></div>
+        <div class="chart-controls"><div class="timeframes" id="timeframes"><button data-tf="1m">M1</button><button data-tf="5m">M5</button><button data-tf="15m">M15</button><button data-tf="30m">M30</button><button data-tf="1h" class="active">H1</button><button data-tf="4h">H4</button><button data-tf="1d">D1</button></div><button id="resetView" class="chart-action">Reset view</button></div>
       </div>
       <div class="chart-stage" id="chartStage">
-        <aside class="drawing-toolbar" aria-label="Drawing tools">
-          <div class="toolbar-caption">DRAW</div>
-          <button class="tool-button active" data-tool="cursor" title="Cursor"><span>⌖</span></button>
-          <button class="tool-button" data-tool="horizontal" title="Horizontal line"><span>—</span></button>
-          <button class="tool-button" data-tool="trend" title="Trend line"><span>╱</span></button>
-          <button class="tool-button" data-tool="rectangle" title="Rectangle / box"><span>□</span></button>
-          <button class="tool-button" data-tool="fibonacci" title="Fibonacci retracement"><span>F</span></button>
-          <div class="toolbar-separator"></div>
-          <div class="toolbar-caption">MEASURE</div>
-          <button class="tool-button" data-tool="distance" title="Price distance"><span>↕</span></button>
-          <button class="tool-button" data-tool="rr" title="Risk / reward ratio"><span>R:R</span></button>
-          <div class="toolbar-hint">Right-click<br>drawing to<br>delete</div>
-        </aside>
-        <div id="chart" class="chart-canvas"></div>
-        <svg id="drawingOverlay" class="drawing-overlay" aria-hidden="true"></svg>
-        <div id="crosshairReadout" class="crosshair-readout">Move crosshair over chart</div>
-        <div id="chartLoading" class="chart-loading"><span class="loader"></span><span>Loading XAUUSD market data</span></div>
+        <aside class="drawing-toolbar" aria-label="Replay drawing tools"><div class="toolbar-caption">ANNOTATE</div><button class="tool-button active" data-tool="cursor" title="Cursor">⌖</button><button class="tool-button" data-tool="horizontal" title="Horizontal line">—</button><button class="tool-button" data-tool="trend" title="Trend line">╱</button><button class="tool-button" data-tool="rectangle" title="Rectangle">□</button><button class="tool-button" data-tool="fibonacci" title="Fibonacci retracement">F</button><div class="toolbar-hint">Drawings persist<br>through replay</div></aside>
+        <div id="chart" class="chart-canvas"></div><svg id="drawingOverlay" class="drawing-overlay" aria-hidden="true"></svg><div id="chartReadout" class="chart-readout">Step through history to reveal price action</div><div id="chartLoading" class="chart-loading"><span class="loader"></span><span>Loading historical XAUUSD data</span></div>
       </div>
-      <div class="chart-footer">
-        <div class="footer-legend"><span><i class="legend-swatch up"></i>Up candle</span><span><i class="legend-swatch down"></i>Down candle</span><span><i class="legend-line"></i>Paper execution</span></div>
-        <div class="footer-note">All orders are simulated · Data from Yahoo Finance</div>
+      <div class="replay-dock">
+        <div class="replay-dock-left"><span class="dock-label">REPLAY CONTROL</span><strong id="replayDate">—</strong><span id="barCount" class="bar-count">0 / 0 bars</span></div>
+        <div class="replay-controls"><button id="resetSession" title="Reset backtest session">↺</button><button id="stepBack" title="Previous candle">◀</button><button id="playPause" class="play-button" title="Play / pause replay">▶</button><button id="stepForward" title="Next candle">▶</button><button id="jumpSession" title="Jump to next trading session">↠</button><button id="jumpEnd" title="Jump to end">▶|</button></div>
+        <div class="replay-dock-right"><label>Speed<select id="replaySpeed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="5">5×</option><option value="10">10×</option></select></label><button id="randomStart" class="dock-button">Random start</button></div>
       </div>
     </section>
 
-    <aside class="trade-panel panel">
-      <div class="panel-title-row"><div><span class="eyebrow">PAPER ACCOUNT</span><h2>Order ticket</h2></div><span class="account-chip">SIM</span></div>
-      <div class="account-summary compact-summary">
-        <div><span>Balance</span><strong id="balanceValue">$100.00</strong></div>
-        <div><span>Equity</span><strong id="equityValue">$100.00</strong></div>
-        <div><span>Floating P&amp;L</span><strong id="floatingValue" class="neutral">$0.00</strong></div>
-      </div>
-      <div class="order-card">
-        <div class="side-toggle" role="group" aria-label="Order side"><button id="buyTab" class="buy-side active">BUY</button><button id="sellTab" class="sell-side">SELL</button></div>
-        <div class="ticket-price"><span>Market execution</span><strong id="ticketPrice">—</strong></div>
-        <div class="form-grid">
-          <label>Lot size<input id="lotSize" type="number" min="0.01" step="0.01" value="0.10" /></label>
-          <label>Stop loss<input id="stopLoss" type="number" step="0.01" placeholder="Price" /></label>
-          <label>Take profit<input id="takeProfit" type="number" step="0.01" placeholder="Price" /></label>
-        </div>
-        <div id="riskHint" class="risk-hint">Set SL and TP to calculate risk before execution.</div>
-        <button id="placeTrade" class="execute-button buy-execute">Place buy order <span>↗</span></button>
-      </div>
-      <div class="open-trades-section">
-        <div class="section-heading"><div><span class="eyebrow">ACTIVE RISK</span><h3>Open trades <b id="openCount">0</b></h3></div><span class="pulse-label"><i class="status-dot"></i> LIVE P&amp;L</span></div>
-        <div id="openTrades" class="open-trades-list"><div class="empty-state"><span class="empty-icon">＋</span><strong>No open trades</strong><span>Place a paper order to track it here.</span></div></div>
-      </div>
+    <aside class="sidebar">
+      <section class="panel session-card"><div class="card-heading"><div><span class="eyebrow">SESSION</span><h2>Historical replay</h2></div><span id="sessionState" class="state-pill paused">PAUSED</span></div><div class="session-grid"><div><span>Start</span><strong id="sessionStart">—</strong></div><div><span>Cursor</span><strong id="sessionCursor">—</strong></div><div><span>Visible bars</span><strong id="visibleBars">0</strong></div><div><span>Hidden bars</span><strong id="hiddenBars">0</strong></div></div><div class="session-actions"><button id="jumpNextSession" class="secondary-button">Next session open</button><button id="newSession" class="secondary-button">New session</button></div></section>
+
+      <section class="panel assumptions-card"><div class="card-heading"><div><span class="eyebrow">EXECUTION MODEL</span><h2>Backtest assumptions</h2></div><button id="toggleAssumptions" class="collapse-button">⌃</button></div><div id="assumptionBody" class="assumption-body"><div class="field-grid"><label>Starting balance<input id="startingBalance" type="number" min="0" step="100" value="10000"></label><label>Lot size<input id="lotSize" type="number" min="0.01" step="0.01" value="0.10"></label><label>Spread (points)<input id="spreadPoints" type="number" min="0" step="1" value="25"></label><label>Slippage (points)<input id="slippagePoints" type="number" min="0" step="1" value="2"></label><label>Commission / lot<input id="commission" type="number" min="0" step="0.1" value="3.50"></label><label>Point size<input id="pointSize" type="number" min="0.001" step="0.001" value="0.01"></label></div><p class="assumption-note">Market fills include spread, slippage, and commission. If SL and TP touch in one candle, SL is assumed first.</p></div></section>
+
+      <section class="panel order-card"><div class="card-heading"><div><span class="eyebrow">MANUAL SIMULATOR</span><h2>Place backtest order</h2></div><span class="pause-note">Works while paused</span></div><div class="side-toggle"><button id="buyTab" class="active buy-side">BUY</button><button id="sellTab" class="sell-side">SELL</button></div><div class="order-type-tabs"><button data-order-type="market" class="active">Market</button><button data-order-type="limit">Limit</button><button data-order-type="stop">Stop</button></div><div class="ticket-price"><span>Replay price</span><strong id="replayPrice">—</strong></div><div class="field-grid order-fields"><label id="entryField">Entry price<input id="entryPrice" type="number" step="0.01" placeholder="Market on click"></label><label>Stop loss<input id="stopLoss" type="number" step="0.01" placeholder="Optional"></label><label>Take profit<input id="takeProfit" type="number" step="0.01" placeholder="Optional"></label></div><label class="notes-field">Setup note<input id="tradeNote" type="text" placeholder="Why are you taking this trade?"></label><div id="orderHint" class="order-hint">Paused replay lets you analyze before placing the order.</div><button id="placeOrder" class="execute-button buy-execute">Place market buy <span>↗</span></button></section>
+
+      <section class="panel orders-card"><div class="card-heading"><div><span class="eyebrow">TRADE STATE</span><h2>Pending &amp; open <b id="activeCount">0</b></h2></div><span class="live-pnl-label"><i></i> MARK TO MARKET</span></div><div id="activeOrders" class="active-orders"><div class="empty-state small"><strong>No active orders</strong><span>Place a market or pending order while paused.</span></div></div></section>
     </aside>
   </main>
 
-  <section class="history-panel panel" id="historyPanel">
-    <div class="history-header"><div><span class="eyebrow">LEDGER</span><h2>Trade history</h2></div><div class="history-actions"><div class="stats-inline"><span><small>Win rate</small><strong id="winRate">—</strong></span><span><small>Total P&amp;L</small><strong id="totalPnl">$0.00</strong></span><span><small>Trades</small><strong id="totalTrades">0</strong></span></div><button class="collapse-button" id="historyToggle" title="Collapse history">⌄</button></div></div>
-    <div class="history-content" id="historyContent"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Symbol</th><th>Direction</th><th>Entry</th><th>Exit</th><th>Lot size</th><th>P&amp;L</th><th>RR achieved</th></tr></thead><tbody id="historyBody"><tr><td colspan="8" class="empty-table">No closed trades yet. Your completed orders will appear here.</td></tr></tbody></table></div></div>
-  </section>
+  <section class="results-panel panel" id="resultsPanel"><div class="results-header"><div><span class="eyebrow">RESULTS</span><h2>Backtest report</h2></div><div class="results-actions"><div class="result-tabs"><button data-results-tab="overview" class="active">Overview</button><button data-results-tab="trades">Trade log</button></div><button id="resultsToggle" class="collapse-button">⌄</button></div></div><div id="resultsContent" class="results-content"><div id="overviewTab" class="overview-tab"><div class="stats-grid"><div class="stat-card"><span>Net P&amp;L</span><strong id="netPnl">$0.00</strong><small id="returnPct">0.00% return</small></div><div class="stat-card"><span>Win rate</span><strong id="winRate">—</strong><small id="tradeCount">0 trades</small></div><div class="stat-card"><span>Profit factor</span><strong id="profitFactor">—</strong><small>Gross win / gross loss</small></div><div class="stat-card"><span>Max drawdown</span><strong id="maxDrawdown">$0.00</strong><small id="maxDrawdownPct">0.00% of equity</small></div><div class="stat-card"><span>Expectancy</span><strong id="expectancy">$0.00</strong><small>Average net trade</small></div><div class="stat-card"><span>Average R</span><strong id="averageR">—</strong><small>Risk-adjusted result</small></div><div class="stat-card"><span>Best / worst</span><strong id="bestWorst">—</strong><small>Net trade extremes</small></div><div class="stat-card"><span>Streak</span><strong id="streak">—</strong><small>Best win / loss run</small></div></div><div class="analytics-grid"><div class="equity-card"><div class="mini-heading"><span>Equity curve</span><span id="equityRange">$10,000.00 → $10,000.00</span></div><canvas id="equityCanvas"></canvas></div><div class="breakdown-card"><div class="mini-heading"><span>Breakdown</span><span>Current session</span></div><div class="breakdown-row"><span>Long / short</span><strong id="longShort">0 / 0</strong></div><div class="breakdown-row"><span>Average win</span><strong id="averageWin">$0.00</strong></div><div class="breakdown-row"><span>Average loss</span><strong id="averageLoss">$0.00</strong></div><div class="breakdown-row"><span>Wins / losses</span><strong id="winsLosses">0 / 0</strong></div><div class="breakdown-row"><span>Exit reasons</span><strong id="exitReasons">—</strong></div></div></div></div><div id="tradesTab" class="trades-tab hidden"><div class="table-wrap"><table><thead><tr><th>Time</th><th>Side</th><th>Entry</th><th>Exit</th><th>Lots</th><th>Gross</th><th>Costs</th><th>Net P&amp;L</th><th>R</th><th>Reason</th><th>Note</th></tr></thead><tbody id="tradeLogBody"><tr><td colspan="11" class="empty-table">No completed trades in this session.</td></tr></tbody></table></div></div></div></section>
 
-  <div class="settings-backdrop" id="settingsBackdrop" hidden></div>
-  <section class="settings-drawer" id="settingsDrawer" aria-label="Account settings" aria-hidden="true">
-    <div class="drawer-header"><div><span class="eyebrow">PREFERENCES</span><h2>Account settings</h2></div><button class="icon-button" id="closeSettings" aria-label="Close settings">×</button></div>
-    <label class="setting-field">Starting balance<input id="balanceInput" type="number" min="0" step="0.01" value="100" /><small>Changes apply immediately to your paper account balance.</small></label>
-    <label class="setting-field">Point value<input id="pointValueInput" type="number" min="0.01" step="0.01" value="0.01" /><small>XAUUSD point size used by measurement tools.</small></label>
-    <div class="storage-note"><span>LOCAL STORAGE</span><p>Drawings, open trades, history, and account settings stay on this browser. No backend or paid API key is required.</p></div>
-    <button class="danger-button" id="clearWorkspace">Clear local workspace</button>
-  </section>
-
+  <div class="settings-backdrop" id="settingsBackdrop" hidden></div><section class="settings-drawer" id="settingsDrawer" aria-hidden="true"><div class="drawer-header"><div><span class="eyebrow">SESSION TOOLS</span><h2>Backtest controls</h2></div><button id="closeSettings" class="icon-button">×</button></div><button id="downloadCsv" class="wide-secondary">Download trade CSV</button><button id="clearSession" class="danger-button">Clear session data</button><div class="drawer-note"><strong>How this works</strong><p>Only candles up to the replay cursor are visible. Orders are evaluated on subsequent historical bars. Your replay session and trade log stay in this browser.</p></div></section>
   <div class="context-menu" id="contextMenu" hidden><button id="deleteDrawing">Delete drawing</button></div>
-  <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="terminal.js"></script>
+
+  <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script><script src="terminal.js"></script>
 </body>
 </html>
