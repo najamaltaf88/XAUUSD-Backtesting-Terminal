@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080b10" />
+  <title>XAUUSD // PAPER TERMINAL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="terminal.css" />
+</head>
+<body>
+  <div id="toastStack" class="toast-stack" aria-live="polite"></div>
+  <header class="topbar">
+    <div class="brand-lockup">
+      <div class="brand-mark">X</div>
+      <div>
+        <div class="brand-name">AURUM TERMINAL</div>
+        <div class="brand-sub">XAUUSD · PAPER EXECUTION</div>
+      </div>
+    </div>
+    <div class="market-strip">
+      <div class="market-quote"><span class="quote-label">GOLD / USD</span><strong id="topPrice">—</strong><span id="topChange" class="positive">—</span></div>
+      <div class="market-status"><i class="status-dot"></i><span id="dataStatus">CONNECTING DATA</span><small id="lastUpdated">—</small></div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-button" id="refreshButton" title="Refresh market data" aria-label="Refresh market data">↻</button>
+      <button class="icon-button" id="settingsButton" title="Account settings" aria-label="Account settings">⚙</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="chart-panel panel">
+      <div class="chart-header">
+        <div class="instrument-block">
+          <div class="instrument-symbol">XAUUSD <span class="live-badge">LIVE</span></div>
+          <div class="instrument-meta"><span id="ohlcSummary">O  — &nbsp; H  — &nbsp; L  — &nbsp; C  —</span><span class="muted">·</span><span id="sessionLabel">London / New York overlap</span></div>
+        </div>
+        <div class="chart-controls">
+          <div class="timeframes" id="timeframes" role="group" aria-label="Chart timeframes">
+            <button data-tf="1m">M1</button><button data-tf="5m">M5</button><button data-tf="15m">M15</button><button data-tf="30m">M30</button><button data-tf="1h" class="active">H1</button><button data-tf="4h">H4</button><button data-tf="1d">D1</button>
+          </div>
+          <button class="chart-action" id="resetChart" title="Reset chart view">Reset view</button>
+        </div>
+      </div>
+      <div class="chart-stage" id="chartStage">
+        <aside class="drawing-toolbar" aria-label="Drawing tools">
+          <div class="toolbar-caption">DRAW</div>
+          <button class="tool-button active" data-tool="cursor" title="Cursor"><span>⌖</span></button>
+          <button class="tool-button" data-tool="horizontal" title="Horizontal line"><span>—</span></button>
+          <button class="tool-button" data-tool="trend" title="Trend line"><span>╱</span></button>
+          <button class="tool-button" data-tool="rectangle" title="Rectangle / box"><span>□</span></button>
+          <button class="tool-button" data-tool="fibonacci" title="Fibonacci retracement"><span>F</span></button>
+          <div class="toolbar-separator"></div>
+          <div class="toolbar-caption">MEASURE</div>
+          <button class="tool-button" data-tool="distance" title="Price distance"><span>↕</span></button>
+          <button class="tool-button" data-tool="rr" title="Risk / reward ratio"><span>R:R</span></button>
+          <div class="toolbar-hint">Right-click<br>drawing to<br>delete</div>
+        </aside>
+        <div id="chart" class="chart-canvas"></div>
+        <svg id="drawingOverlay" class="drawing-overlay" aria-hidden="true"></svg>
+        <div id="crosshairReadout" class="crosshair-readout">Move crosshair over chart</div>
+        <div id="chartLoading" class="chart-loading"><span class="loader"></span><span>Loading XAUUSD market data</span></div>
+      </div>
+      <div class="chart-footer">
+        <div class="footer-legend"><span><i class="legend-swatch up"></i>Up candle</span><span><i class="legend-swatch down"></i>Down candle</span><span><i class="legend-line"></i>Paper execution</span></div>
+        <div class="footer-note">All orders are simulated · Data from Yahoo Finance</div>
+      </div>
+    </section>
+
+    <aside class="trade-panel panel">
+      <div class="panel-title-row"><div><span class="eyebrow">PAPER ACCOUNT</span><h2>Order ticket</h2></div><span class="account-chip">SIM</span></div>
+      <div class="account-summary compact-summary">
+        <div><span>Balance</span><strong id="balanceValue">$100.00</strong></div>
+        <div><span>Equity</span><strong id="equityValue">$100.00</strong></div>
+        <div><span>Floating P&amp;L</span><strong id="floatingValue" class="neutral">$0.00</strong></div>
+      </div>
+      <div class="order-card">
+        <div class="side-toggle" role="group" aria-label="Order side"><button id="buyTab" class="buy-side active">BUY</button><button id="sellTab" class="sell-side">SELL</button></div>
+        <div class="ticket-price"><span>Market execution</span><strong id="ticketPrice">—</strong></div>
+        <div class="form-grid">
+          <label>Lot size<input id="lotSize" type="number" min="0.01" step="0.01" value="0.10" /></label>
+          <label>Stop loss<input id="stopLoss" type="number" step="0.01" placeholder="Price" /></label>
+          <label>Take profit<input id="takeProfit" type="number" step="0.01" placeholder="Price" /></label>
+        </div>
+        <div id="riskHint" class="risk-hint">Set SL and TP to calculate risk before execution.</div>
+        <button id="placeTrade" class="execute-button buy-execute">Place buy order <span>↗</span></button>
+      </div>
+      <div class="open-trades-section">
+        <div class="section-heading"><div><span class="eyebrow">ACTIVE RISK</span><h3>Open trades <b id="openCount">0</b></h3></div><span class="pulse-label"><i class="status-dot"></i> LIVE P&amp;L</span></div>
+        <div id="openTrades" class="open-trades-list"><div class="empty-state"><span class="empty-icon">＋</span><strong>No open trades</strong><span>Place a paper order to track it here.</span></div></div>
+      </div>
+    </aside>
+  </main>
+
+  <section class="history-panel panel" id="historyPanel">
+    <div class="history-header"><div><span class="eyebrow">LEDGER</span><h2>Trade history</h2></div><div class="history-actions"><div class="stats-inline"><span><small>Win rate</small><strong id="winRate">—</strong></span><span><small>Total P&amp;L</small><strong id="totalPnl">$0.00</strong></span><span><small>Trades</small><strong id="totalTrades">0</strong></span></div><button class="collapse-button" id="historyToggle" title="Collapse history">⌄</button></div></div>
+    <div class="history-content" id="historyContent"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Symbol</th><th>Direction</th><th>Entry</th><th>Exit</th><th>Lot size</th><th>P&amp;L</th><th>RR achieved</th></tr></thead><tbody id="historyBody"><tr><td colspan="8" class="empty-table">No closed trades yet. Your completed orders will appear here.</td></tr></tbody></table></div></div>
+  </section>
+
+  <div class="settings-backdrop" id="settingsBackdrop" hidden></div>
+  <section class="settings-drawer" id="settingsDrawer" aria-label="Account settings" aria-hidden="true">
+    <div class="drawer-header"><div><span class="eyebrow">PREFERENCES</span><h2>Account settings</h2></div><button class="icon-button" id="closeSettings" aria-label="Close settings">×</button></div>
+    <label class="setting-field">Starting balance<input id="balanceInput" type="number" min="0" step="0.01" value="100" /><small>Changes apply immediately to your paper account balance.</small></label>
+    <label class="setting-field">Point value<input id="pointValueInput" type="number" min="0.01" step="0.01" value="0.01" /><small>XAUUSD point size used by measurement tools.</small></label>
+    <div class="storage-note"><span>LOCAL STORAGE</span><p>Drawings, open trades, history, and account settings stay on this browser. No backend or paid API key is required.</p></div>
+    <button class="danger-button" id="clearWorkspace">Clear local workspace</button>
+  </section>
+
+  <div class="context-menu" id="contextMenu" hidden><button id="deleteDrawing">Delete drawing</button></div>
+  <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+  <script src="terminal.js"></script>
+</body>
+</html>
