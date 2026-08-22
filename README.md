@@ -23,3 +23,7 @@ The app supports Twelve Data as the primary provider when a user enters their ow
 ## Specification coverage
 
 The current build includes one-click mode, a replay progress slider, go-to-start and go-to-date controls, 50× replay speed, volume toggling, current-price line, collapsible drawing toolbar, ray and extended-line annotations, text and arrow tools, price distance, RR ratio, range selector, optional SL/TP, draggable brackets, pending-order chart lines, named session snapshots, JSON export, PDF print workflow, sortable/filterable trade logs, time analytics, performance calendar, keyboard shortcuts, and responsive sidebar tabs.
+
+## Replay date behavior
+
+Fresh loads now request data through the current date, open on the latest available candle, and fit the chart to the last 100 bars. The replay date picker is capped to the current date and defaults to today. Selecting a historical date moves the cursor to the nearest available trading candle, hides all later bars, scrolls the chart to that point, stores the selection locally, and shows a replay-start toast. Explicitly continued sessions restore their saved cursor and show a session-restored message.
