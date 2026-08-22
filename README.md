@@ -10,7 +10,7 @@ Serve the repository with a static web server, then open the site in a browser. 
 
 The preferred source is user-supplied Twelve Data history for `XAU/USD`. The key is stored only in the browser’s local storage. Twelve Data requests are date-ranged and chunked, then normalized, merged, sorted, deduplicated, and validated before replay.
 
-If exact spot history is unavailable, the application does **not** silently relabel a futures proxy as XAU/USD. The user must explicitly enable **Allow offline Gold Futures (GC=F) proxy** in Settings. The chart then identifies the active source as `Gold Futures (GC=F)`/offline proxy. Without an exact source or explicit proxy consent, the application shows a no-data state.
+If exact spot history is unavailable, the application does **not** silently relabel a futures proxy as XAU/USD. The verified real Gold Futures (`GC=F`) history loads by default as a clearly labeled fallback. Users can disable **Use labeled Gold Futures (GC=F) fallback** in Settings if they want an exact-spot-only no-data state. The chart identifies the active source as `Gold Futures (GC=F)`/offline proxy.
 
 Offline bundles are real Yahoo Finance gold futures (`GC=F`) proxy data. They are supplied separately for M1, M5, M15, M30, H1, H4, and D1 and are checked by `scripts/validate_bundles.py`. The app does not generate synthetic candles and does not use the former fake Metals-API OHLC transformation.
 

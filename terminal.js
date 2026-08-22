@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   // Public client apps must not embed private API secrets. A user-supplied Twelve Data key is stored locally only.
-  const CONFIG={TWELVE_DATA_KEY:localStorage.getItem('aurum-twelve-data-key')||'',ALLOW_OFFLINE_PROXY:localStorage.getItem('aurum-allow-offline-proxy')==='true',CACHE_TTL:3600000};
+  const OFFLINE_PROXY_KEY='aurum-allow-offline-proxy';if(localStorage.getItem(OFFLINE_PROXY_KEY)===null)localStorage.setItem(OFFLINE_PROXY_KEY,'true');const CONFIG={TWELVE_DATA_KEY:localStorage.getItem('aurum-twelve-data-key')||'',ALLOW_OFFLINE_PROXY:localStorage.getItem(OFFLINE_PROXY_KEY)!=='false',CACHE_TTL:3600000};
   const DATA_END_DATE=new Date().toISOString().slice(0,10);
   const INSTRUMENT={symbol:'XAU/USD',contractSize:100,tickSize:0.01,tickValue:1,minLot:0.01,maxLot:100,lotStep:0.01,timezone:'UTC'};
   const INTRABAR_CONFLICT_POLICY='conservative';
