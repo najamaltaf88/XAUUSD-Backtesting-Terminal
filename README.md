@@ -1,39 +1,56 @@
-# XAUUSD Backtesting Lab
+# XAU/USD Backtesting Lab
 
-A standalone dark-theme **historical replay and manual backtesting application** built with plain HTML, CSS, and JavaScript. This is not a live-trading ticket. Future candles remain hidden until the replay cursor reaches them, and every order is evaluated against subsequent historical bars.
-
-The app uses TradingView Lightweight Charts and follows a real-data-only provider order: Twelve Data first, Metals-API second, and the bundled `xauusd_data.csv` as the final offline fallback. It never generates synthetic OHLC prices.
+A standalone dark-theme **historical replay and manual backtesting terminal** built with plain HTML, CSS, and JavaScript. It is a historical research tool, not a live-trading system. Future candles remain hidden until the replay cursor reaches them, and all orders are evaluated by the same deterministic historical-bar engine.
 
 ## Run locally
 
-Open `index.html` directly in a browser, or serve the folder with any static web server. A static server is recommended for the CSV fallback because browser security can block `fetch()` from a `file://` page. No backend or paid API key is required; Twelve Data and Metals-API keys are optional local settings.
+Serve the repository with a static web server, then open the site in a browser. A server is recommended because browser security can block `fetch()` from `file://` pages. No API key is committed to this repository.
 
-## Backtesting workflow
+## Data sources and provenance
 
-Choose a historical session, then use play/pause, single-candle backward and forward, next-session jump, earlier-start, adjustable speed, and jump-to-end controls. Switching M1, M5, M15, M30, H1, H4, or D1 preserves the selected replay date, session start, and replay price context. The new timeframe selects the nearest candle on that historical date around the previous cursor price instead of jumping to the latest date or an unrelated level. Chart-level and sidebar Quick BUY/SELL actions execute immediately at the replay price with no SL/TP and no confirmation, matching a one-click backtesting workflow. The normal order ticket remains available for market, limit, or stop entries with optional BUY/SELL brackets, lot size, spread, slippage, commission, and a setup note. Open positions expose optional ADD SL / ADD TP lines on the chart; drag them to add or modify brackets, or use the active-trade fields. Each bracket shows its price, pip distance, and estimated dollar outcome. Pending orders fill only when later candles reach their price. A conservative same-candle rule assumes SL is hit before TP when both are touched.
+The preferred source is user-supplied Twelve Data history for `XAU/USD`. The key is stored only in the browser’s local storage. Twelve Data requests are date-ranged and chunked, then normalized, merged, sorted, deduplicated, and validated before replay.
 
-The report includes net P&L, return, win rate, profit factor, maximum drawdown, expectancy, average R, best and worst trade, streaks, long/short breakdown, equity curve, and a detailed trade log. Completed trades can be exported as CSV. Replay state, orders, trades, assumptions, and drawings persist in localStorage.
+If exact spot history is unavailable, the application does **not** silently relabel a futures proxy as XAU/USD. The user must explicitly enable **Allow offline Gold Futures (GC=F) proxy** in Settings. The chart then identifies the active source as `Gold Futures (GC=F)`/offline proxy. Without an exact source or explicit proxy consent, the application shows a no-data state.
 
-The research notes and product specification are included in `research-notes.md` and `backtest-spec.md`.
+Offline bundles are real Yahoo Finance gold futures (`GC=F`) proxy data. They are supplied separately for M1, M5, M15, M30, H1, H4, and D1 and are checked by `scripts/validate_bundles.py`. The app does not generate synthetic candles and does not use the former fake Metals-API OHLC transformation.
 
-## Data-provider configuration
+## Replay workflow
 
-The app supports Twelve Data as the primary provider when a user enters their own key in the settings drawer. The key is kept in that browser’s localStorage and is not embedded in the public repository. If Twelve Data fails, the app tries Metals-API. If both APIs fail, it loads the bundled real historical `xauusd_data.csv` and shows `Using offline data — connect internet for live data`. If the CSV cannot load, it shows `Unable to load price data. Check your API key in Settings or internet connection.` and does not display fake candles.
+Choose a historical date or use the replay controls to start a session. Only candles up to the cursor are visible. Forward stepping, slider movement, play mode, and session jumps all call the authoritative `processHistoricalBar(bar)` engine. Backward movement restores a per-cursor checkpoint containing positions, pending orders, closed trades, balance, equity, P&L, commissions, drawdown, and replay events.
 
-## Specification coverage
+Switching timeframe preserves the historical cursor date and nearest price context. Session save/load also stores the provider, symbol, timeframe, dataset identity, coverage, cursor, replay settings, account state, orders, trades, checkpoints, and drawings. A saved state is not silently restored against a different dataset.
 
-The current build includes chart-level immediate Quick BUY/SELL, a replay progress slider, go-to-start and go-to-date controls, 50× replay speed, volume toggling, current-price line, collapsible drawing toolbar, ray and extended-line annotations, text and arrow tools, price distance, RR ratio, range selector, optional/add-on SL/TP, draggable bracket lines, pending-order chart lines, named session snapshots, JSON export, PDF print workflow, sortable/filterable trade logs, time analytics, performance calendar, keyboard shortcuts, responsive sidebar tabs, API status, and the bundled offline CSV.
+## Execution model
 
-## Replay date behavior
+The configured XAU/USD instrument is represented explicitly as a 100-ounce contract with a 0.01 tick size, $1 tick value per lot, 0.01 minimum lot, 100-lot maximum, and 0.01 lot step. These assumptions are visible in code and can be revised if a broker-specific contract is required.
 
-Fresh loads now request data through the current date, open on the latest available candle, and fit the chart to the last 100 bars. The replay date picker is capped to the current date and defaults to today. Selecting a historical date moves the cursor to the nearest available trading candle, hides all later bars, scrolls the chart to that point, stores the selection locally, and shows a replay-start toast. Changing timeframe preserves the cursor date, session-start timestamps, and nearest same-price context instead of resetting to today or moving to an unrelated price. Explicitly continued sessions restore their saved cursor and show a session-restored message.
+For a candle midpoint, the simplified historical model uses `Ask = mid + spread/2` and `Bid = mid - spread/2`. BUY entries use Ask, SELL entries use Bid, BUY exits use Bid, and SELL exits use Ask. Positive slippage worsens the executed side deterministically; no random slippage is generated. This model is applied consistently to market orders, pending fills, manual closes, SL, and TP execution.
 
-## Real-data fallback policy
+The supported order types are Market, Buy Limit, Sell Limit, Buy Stop, Sell Stop, manual close, partial close, SL, TP, and pending cancellation. Pending cancellations remove the order and create no completed trade, P&L, or commission. Commission is one-side commission per lot: entry commission is charged at entry, exit commission on closed quantity, and partial-close entry commission is allocated proportionally.
 
-The app never silently substitutes a generated price path. It tries Twelve Data first with `XAU/USD`, the selected interval, `outputsize=500`, `end_date` set to the current date, and UTC timezone. If that request fails, it tries Metals-API. If both online sources fail, D1 uses the bundled `xauusd_data.csv` real gold history and displays an offline-data warning; unsupported intraday offline requests show the explicit no-data error instead of relabeling daily candles as minute or hourly candles.
+## Quick orders, brackets, and risk
 
-The bundled CSV was generated from real Yahoo gold history because Yahoo's spot symbol endpoint is not reliably available for download. It is kept only as a truthful offline fallback and is not generated by the app.
+Chart and sidebar Quick BUY/SELL use the same order-placement engine as the normal ticket. They execute immediately at the replay bar using the configured spread, slippage, quantity, and commission assumptions. They begin without attached SL/TP; brackets can be added through the active-order fields or by dragging the optional chart levels.
 
-## Offline timeframe bundles
+Risk sizing uses the session’s initial balance, risk percentage, entry, SL distance, contract size, point size, spread, expected slippage, and commission. If the calculated quantity is below the minimum lot, the application warns that actual risk will exceed requested risk.
 
-When online providers are unavailable, each timeframe loads its own bundled real historical file (`xauusd_1m.json`, `xauusd_5m.json`, `xauusd_15m.json`, `xauusd_30m.json`, `xauusd_1h.json`, `xauusd_4h.json`, or `xauusd_data.csv` for D1). This prevents the previous failure mode where a failed timeframe request left the prior timeframe’s candles on screen. The bundles are real Yahoo gold futures (`GC=F`) proxy candles, not generated prices; the online Twelve Data path remains the exact XAU/USD source when configured.
+## Intrabar limitation
+
+OHLC candles do not reveal the exact order in which high and low were touched. The default configurable policy is **conservative**: if both SL and TP are touched in one candle, SL is assumed first. This is an explicit approximation and should not be interpreted as tick-accurate execution.
+
+## Analytics and export
+
+The report is rebuilt from authoritative trade and equity data and includes net P&L, win rate, profit factor, expectancy, average R, max drawdown amount and percentage, streaks, long/short results, equity curve, session performance, and a detailed journal. Journal records include trade and order identifiers, symbol, provider, timeframe, requested and actual prices, quantity, spread, slippage, entry/exit commission, gross and net P&L, R multiple, result, exit reason, entry session, and exit session. CSV export includes these fields. Chart screenshots composite the base chart with custom drawings and trade overlays.
+
+Session labels use timezone-aware `Intl.DateTimeFormat` calculations for Asia, London, and New York rather than fixed UTC blocks. Entry and exit sessions are stored separately, and Next Session follows the configured session order.
+
+## Validation
+
+Run:
+
+```bash
+node --check terminal.js
+python3 scripts/validate_bundles.py
+```
+
+The repository includes complete-dataset checks for timestamp ordering, duplicates, OHLC consistency, invalid numeric values, suspicious gaps, timeframe interval, source identity, coverage start, coverage end, and candle count.
