@@ -10,7 +10,7 @@ Open `index.html` directly in a browser, or serve the folder with any static web
 
 ## Backtesting workflow
 
-Choose a historical session, then use play/pause, single-candle backward and forward, next-session jump, earlier-start, adjustable speed, and jump-to-end controls. Orders can be placed while replay is paused as market, limit, or stop entries with BUY/SELL direction, lot size, SL, TP, spread, slippage, commission, and a setup note. Pending orders fill only when later candles reach their price. A conservative same-candle rule assumes SL is hit before TP when both are touched.
+Choose a historical session, then use play/pause, single-candle backward and forward, next-session jump, earlier-start, adjustable speed, and jump-to-end controls. Chart-level and sidebar Quick BUY/SELL actions execute immediately at the replay price with no SL/TP and no confirmation, matching a one-click backtesting workflow. The normal order ticket remains available for market, limit, or stop entries with optional BUY/SELL brackets, lot size, spread, slippage, commission, and a setup note. Open positions expose optional ADD SL / ADD TP lines on the chart; drag them to add or modify brackets, or use the active-trade fields. Pending orders fill only when later candles reach their price. A conservative same-candle rule assumes SL is hit before TP when both are touched.
 
 The report includes net P&L, return, win rate, profit factor, maximum drawdown, expectancy, average R, best and worst trade, streaks, long/short breakdown, equity curve, and a detailed trade log. Completed trades can be exported as CSV. Replay state, orders, trades, assumptions, and drawings persist in localStorage.
 
@@ -22,7 +22,7 @@ The app supports Twelve Data as the primary provider when a user enters their ow
 
 ## Specification coverage
 
-The current build includes one-click mode, a replay progress slider, go-to-start and go-to-date controls, 50× replay speed, volume toggling, current-price line, collapsible drawing toolbar, ray and extended-line annotations, text and arrow tools, price distance, RR ratio, range selector, optional SL/TP, draggable brackets, pending-order chart lines, named session snapshots, JSON export, PDF print workflow, sortable/filterable trade logs, time analytics, performance calendar, keyboard shortcuts, responsive sidebar tabs, API status, and the bundled offline CSV.
+The current build includes chart-level immediate Quick BUY/SELL, a replay progress slider, go-to-start and go-to-date controls, 50× replay speed, volume toggling, current-price line, collapsible drawing toolbar, ray and extended-line annotations, text and arrow tools, price distance, RR ratio, range selector, optional/add-on SL/TP, draggable bracket lines, pending-order chart lines, named session snapshots, JSON export, PDF print workflow, sortable/filterable trade logs, time analytics, performance calendar, keyboard shortcuts, responsive sidebar tabs, API status, and the bundled offline CSV.
 
 ## Replay date behavior
 

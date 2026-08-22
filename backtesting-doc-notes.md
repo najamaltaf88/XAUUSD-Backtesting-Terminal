@@ -21,8 +21,22 @@ TradingView documents several order-entry paths, including the order ticket, cha
 
 Source: https://www.tradingview.com/support/solutions/43000480920-i-d-like-to-place-orders-without-having-to-confirm-them-every-time/
 
-One-click trading performs placing, modifying, canceling, and closing actions immediately. Documented entry paths include Buy/Sell buttons, price-scale menus, chart context menus, and keyboard shortcuts. The UI should make one-click mode visible and provide a confirmation option because a click immediately changes order state.
+One-click trading performs placing, modifying, canceling, and closing actions immediately. Documented entry paths include Buy/Sell buttons, price-scale menus, chart context menus, and keyboard shortcuts. This app makes the immediate chart Quick BUY/SELL behavior explicit; optional SL/TP brackets are added afterward through the chart or active-trade fields.
 
 ## Implementation implications
 
 The repair should add a persistent chart-level BUY/SELL action bar that uses the replay cursor price. After a market order is placed, an entry line and optional opposing SL/TP lines should be visible together. Dragging a bracket line should update the parent position, save the new price, recalculate risk/P&L, and preserve the bracket side relationship.
+
+## Chart BUY/SELL and position-line references
+
+Source: https://www.tradingview.com/support/solutions/43000479981-how-to-show-buy-sell-buttons-on-the-chart/
+
+TradingView exposes Buy/Sell buttons directly on the chart through chart settings. The visual reference places compact colored SELL and BUY buttons in the chart’s upper-left area, near the quantity selector, rather than only inside a side order ticket.
+
+Source: https://www.tradingview.com/support/solutions/43000475660-how-to-use-long-and-short-position-drawing-tools/
+
+TradingView’s position visualization keeps entry, stop, and target levels together and displays quantity, risk/reward, price offsets, and P&L. The target and stop are opposite sides of the entry for long and short positions, and their tags are attached to the horizontal levels for direct chart editing.
+
+Source: https://www.tradingview.com/support/solutions/43000480920-i-d-like-to-place-orders-without-having-to-confirm-them-every-time/
+
+One-click mode executes order-related actions immediately. In this app, Quick BUY/SELL therefore must not require SL/TP fields or a confirmation dialog by default; SL/TP should be optional chart-managed brackets that can be added after the position exists.
