@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="terminal.css" />
+  <link rel="stylesheet" href="terminal.css?v=57c093d">
 </head>
 <body>
   <div id="toastStack" class="toast-stack" aria-live="polite"></div>
@@ -51,6 +51,6 @@
   <div class="settings-backdrop" id="settingsBackdrop" hidden></div><section class="settings-drawer" id="settingsDrawer" aria-hidden="true"><div class="drawer-header"><div><span class="eyebrow">SESSION TOOLS</span><h2>Backtest controls</h2></div><button id="closeSettings" class="icon-button">×</button></div><div class="settings-grid"><label>Twelve Data API Key<input id="dataApiKey" type="password" placeholder="Stored in this browser only"><span id="apiKeyStatus" class="api-key-status fallback">No Key — Using Fallback</span><a class="api-key-link" href="https://twelvedata.com/pricing" target="_blank" rel="noreferrer">Get free key at twelvedata.com</a></label><label>Metals-API key<input id="metalsApiKey" type="password" placeholder="Optional fallback key"></label><label>One-click SL (points)<input id="oneClickSL" type="number" min="1" step="1" value="200"></label><label>One-click TP (points)<input id="oneClickTP" type="number" min="1" step="1" value="400"></label><label class="toggle-label"><input id="oneClickConfirm" type="checkbox" checked> Confirm one-click trades</label></div><button id="downloadCsv" class="wide-secondary">Download trade CSV</button><button id="exportStatsPdf" class="wide-secondary">Print / export stats PDF</button><div class="session-save-row"><button id="saveSession" class="secondary-button">Save session</button><button id="loadSession" class="secondary-button">Load saved</button></div><label class="session-name-field">Session name<input id="sessionName" type="text" placeholder="London breakout review"></label><select id="sessionPicker" class="wide-select"><option value="">Load a saved session…</option></select><button id="deleteSession" class="danger-button">Delete selected session</button><button id="exportSession" class="wide-secondary">Export session JSON</button><button id="clearSession" class="danger-button">Clear session data</button><div class="shortcut-sheet" id="shortcutSheet" hidden><strong>Shortcuts</strong><p>Space play/pause · ←/→ step · B/S quick side · Esc cancel tool · Ctrl+Z undo · D toolbar · H horizontal · T trend · F fibonacci · 1–7 timeframe</p></div><div class="drawer-note"><strong>How this works</strong><p>Only candles up to the replay cursor are visible. Orders are evaluated on subsequent historical bars. Your replay session and trade log stay in this browser.</p></div></section>
   <div class="context-menu" id="contextMenu" hidden><button id="deleteDrawing">Delete drawing</button></div>
 
-  <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script><script src="terminal.js"></script>
+  <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script><script src="terminal.js?v=57c093d"></script>
 </body>
 </html>
