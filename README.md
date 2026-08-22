@@ -10,7 +10,7 @@ Open `index.html` directly in a browser, or serve the folder with any static web
 
 ## Backtesting workflow
 
-Choose a historical session, then use play/pause, single-candle backward and forward, next-session jump, earlier-start, adjustable speed, and jump-to-end controls. Chart-level and sidebar Quick BUY/SELL actions execute immediately at the replay price with no SL/TP and no confirmation, matching a one-click backtesting workflow. The normal order ticket remains available for market, limit, or stop entries with optional BUY/SELL brackets, lot size, spread, slippage, commission, and a setup note. Open positions expose optional ADD SL / ADD TP lines on the chart; drag them to add or modify brackets, or use the active-trade fields. Pending orders fill only when later candles reach their price. A conservative same-candle rule assumes SL is hit before TP when both are touched.
+Choose a historical session, then use play/pause, single-candle backward and forward, next-session jump, earlier-start, adjustable speed, and jump-to-end controls. Switching M1, M5, M15, M30, H1, H4, or D1 preserves the selected replay date, cursor position, and session start by mapping their timestamps onto the new timeframe. Chart-level and sidebar Quick BUY/SELL actions execute immediately at the replay price with no SL/TP and no confirmation, matching a one-click backtesting workflow. The normal order ticket remains available for market, limit, or stop entries with optional BUY/SELL brackets, lot size, spread, slippage, commission, and a setup note. Open positions expose optional ADD SL / ADD TP lines on the chart; drag them to add or modify brackets, or use the active-trade fields. Each bracket shows its price, pip distance, and estimated dollar outcome. Pending orders fill only when later candles reach their price. A conservative same-candle rule assumes SL is hit before TP when both are touched.
 
 The report includes net P&L, return, win rate, profit factor, maximum drawdown, expectancy, average R, best and worst trade, streaks, long/short breakdown, equity curve, and a detailed trade log. Completed trades can be exported as CSV. Replay state, orders, trades, assumptions, and drawings persist in localStorage.
 
@@ -26,7 +26,7 @@ The current build includes chart-level immediate Quick BUY/SELL, a replay progre
 
 ## Replay date behavior
 
-Fresh loads now request data through the current date, open on the latest available candle, and fit the chart to the last 100 bars. The replay date picker is capped to the current date and defaults to today. Selecting a historical date moves the cursor to the nearest available trading candle, hides all later bars, scrolls the chart to that point, stores the selection locally, and shows a replay-start toast. Explicitly continued sessions restore their saved cursor and show a session-restored message.
+Fresh loads now request data through the current date, open on the latest available candle, and fit the chart to the last 100 bars. The replay date picker is capped to the current date and defaults to today. Selecting a historical date moves the cursor to the nearest available trading candle, hides all later bars, scrolls the chart to that point, stores the selection locally, and shows a replay-start toast. Changing timeframe preserves the cursor and session-start timestamps instead of resetting to today. Explicitly continued sessions restore their saved cursor and show a session-restored message.
 
 ## Real-data fallback policy
 

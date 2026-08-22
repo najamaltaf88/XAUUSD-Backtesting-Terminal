@@ -40,3 +40,11 @@ TradingView’s position visualization keeps entry, stop, and target levels toge
 Source: https://www.tradingview.com/support/solutions/43000480920-i-d-like-to-place-orders-without-having-to-confirm-them-every-time/
 
 One-click mode executes order-related actions immediately. In this app, Quick BUY/SELL therefore must not require SL/TP fields or a confirmation dialog by default; SL/TP should be optional chart-managed brackets that can be added after the position exists.
+
+## Replay switching and dollar-valued position labels
+
+TradingView’s official long/short position documentation says chart tags should expose entry, stop, target, quantity, price offsets, P&L, and risk/reward. For a long position, target P&L is `(TP - Entry) × quantity × point value × lot size`, while stop P&L is `(SL - Entry) × quantity × point value × lot size`; short positions reverse the price differences. This app maps the same idea to its XAUUSD model with `pnl()` and displays both dollar outcome and point/pip distance.
+
+TradingView’s bracket documentation states that a position may have a stop-loss or take-profit independently, and that users can add or modify position brackets after entry. The app therefore keeps Quick BUY/SELL unbracketed initially and treats the chart’s ADD SL / ADD TP guides as optional price-anchored bracket controls.
+
+TradingView’s price-scale documentation defines the price scale as the mapping between price values and chart coordinates. The overlay must therefore recompute Y coordinates with `series.priceToCoordinate(level)` whenever the chart is rendered or resized, rather than storing screen Y positions.

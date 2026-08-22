@@ -17,3 +17,5 @@
 .position-summary-label{font:600 10px "DM Mono",monospace;fill:#dbe7f3;paint-order:stroke;stroke:#0b1017;stroke-width:3px;pointer-events:none}.optional-bracket{stroke-dasharray:6 4;opacity:.6}.optional-bracket.trade-sl{stroke:#edb14d}.optional-bracket.trade-tp{stroke:#2bc98c}.trade-level-label{font:600 10px "DM Mono",monospace;fill:#edf3fa;paint-order:stroke;stroke:#0b1017;stroke-width:3px;pointer-events:none}.trade-drag-line{touch-action:none}
 
 .chart-trade-rail{left:58px;right:auto;top:12px;align-items:flex-start}.chart-trade-rail .chart-quick-button{min-width:82px;box-shadow:0 6px 14px rgba(0,0,0,.22)}.chart-trade-status{max-width:210px}.trade-level-visual{vector-effect:non-scaling-stroke;stroke-width:1.5;pointer-events:none}.trade-level-visual.trade-entry{stroke:#e7edf5;stroke-dasharray:7 4}.trade-level-visual.trade-sl{stroke:#ed6f76;stroke-dasharray:6 4}.trade-level-visual.trade-tp{stroke:#40c78c;stroke-dasharray:6 4}.trade-drag-line{cursor:ns-resize;vector-effect:non-scaling-stroke}
+
+.bracket-summary{margin-top:6px;color:var(--muted);font:8px/1.4 "DM Mono",monospace;white-space:normal}.bracket-summary::first-letter{color:var(--gold2)}
