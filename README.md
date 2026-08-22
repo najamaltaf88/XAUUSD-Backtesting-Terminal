@@ -15,3 +15,11 @@ Choose a historical session, then use play/pause, single-candle backward and for
 The report includes net P&L, return, win rate, profit factor, maximum drawdown, expectancy, average R, best and worst trade, streaks, long/short breakdown, equity curve, and a detailed trade log. Completed trades can be exported as CSV. Replay state, orders, trades, assumptions, and drawings persist in localStorage.
 
 The research notes and product specification are included in `research-notes.md` and `backtest-spec.md`.
+
+## Data-provider configuration
+
+The app supports Twelve Data as the primary provider when a user enters their own key in the settings drawer. The key is kept in that browser’s localStorage and is not embedded in the public repository. Without a local key, the app uses the free Yahoo Finance `GC=F` endpoint automatically, then falls back to a metals.live spot price plus deterministic historical OHLC data if the browser blocks both providers.
+
+## Specification coverage
+
+The current build includes one-click mode, a replay progress slider, go-to-start and go-to-date controls, 50× replay speed, volume toggling, current-price line, collapsible drawing toolbar, ray and extended-line annotations, text and arrow tools, price distance, RR ratio, range selector, optional SL/TP, draggable brackets, pending-order chart lines, named session snapshots, JSON export, PDF print workflow, sortable/filterable trade logs, time analytics, performance calendar, keyboard shortcuts, and responsive sidebar tabs.
