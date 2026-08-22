@@ -48,3 +48,12 @@ TradingView’s official long/short position documentation says chart tags shoul
 TradingView’s bracket documentation states that a position may have a stop-loss or take-profit independently, and that users can add or modify position brackets after entry. The app therefore keeps Quick BUY/SELL unbracketed initially and treats the chart’s ADD SL / ADD TP guides as optional price-anchored bracket controls.
 
 TradingView’s price-scale documentation defines the price scale as the mapping between price values and chart coordinates. The overlay must therefore recompute Y coordinates with `series.priceToCoordinate(level)` whenever the chart is rendered or resized, rather than storing screen Y positions.
+
+## Reliable bracket drag behavior
+
+TradingView’s official bracket guidance says an open position without brackets can be protected afterward, and its chart-bracket workflow lets users pull SL or TP to the desired price level. Bracket levels can be added or modified independently, and the platform updates position state after bracket changes. The app should therefore use dedicated, wide drag handles for each bracket, keep text labels pointer-transparent, update the parent position on pointer release, and redraw from the current price-to-coordinate mapping after every move.
+
+Sources:
+- https://www.tradingview.com/support/solutions/43000754962-add-brackets-to-the-existing-position/
+- https://www.tradingview.com/support/solutions/43000754961-positions-brackets-modification/
+- https://www.tradingview.com/blog/en/brackets-from-the-chart-28634/
